@@ -75,19 +75,9 @@
      </el-row>
      <el-dialog
       :visible.sync="centerDialogVisible"
-      width="30%"
+      width="50%"
       center>
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-         <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-         <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-      </el-form>
+      <DialogContent />
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
@@ -97,8 +87,10 @@
 </template>
 
 <script>
+import DialogContent from '../common/dialog';
 export default {
   name: 'HelloWorld',
+  components:{ DialogContent},
   data(){
     return{
       form: {
