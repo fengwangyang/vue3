@@ -1,7 +1,8 @@
 <template>
-  <div>
-    <span class='textEdit' @mousemove="show" @mouseout="hide" v-show="!isEdit">{{text}}<i class="el-icon-edit" v-show="isShow" @click="showInput"></i></span>
+  <div @mousemove="show" @mouseout="hide" >
+    <span class='textEdit' v-show="!isEdit">{{text}}</span>
     <el-input v-show="isEdit" v-model="textEdit" @blur="saveText"></el-input>
+    <i class="el-icon-edit" v-show="isShow&&!isEdit" @click="showInput"></i>
   </div>
 </template>
 
@@ -44,3 +45,14 @@ export default {
    cursor: pointer;
  }
 </style>
+<style lang="scss">
+.el-table .cell{
+  min-height:23px;
+ &>div{
+   cursor: pointer;
+  min-height:23px;
+  }
+}
+
+</style>
+

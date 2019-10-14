@@ -1,56 +1,114 @@
 <template>
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
+    <el-form ref="dialogData" :model="dialogData" label-width="120px">
+        <el-form-item label="安装程序名称">
+          <el-input v-model="dialogData.name"></el-input>
         </el-form-item>
-         <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
+         <el-form-item label="安装方式">
+          <el-input v-model="dialogData.installWay"></el-input>
         </el-form-item>
-         <el-form-item label="活动名称">
-          <el-input v-model="form.name"></el-input>
+         <el-form-item label="遇错是否继续">
+          <el-input v-model="dialogData.continueWhenError"></el-input>
         </el-form-item>
+        <el-form-item label="作者">
+          <el-input v-model="dialogData.author"></el-input>
+        </el-form-item>
+        <el-form-item label="详细说明">
+          <el-input v-model="dialogData.explain"></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="最后修改时间">
+          <el-input v-model="dialogData.name"></el-input>
+        </el-form-item> -->
       </el-form>
       <div style='text-align:center'>
        <el-table
-        :data="tableData"
+        :data="dialogData.commandList"
         border
         style="width: 100%">
         <el-table-column
-          prop="date"
-          label="日期"
+          prop="cmdId"
+          label="命令id"
+          width="100">
+          <template slot-scope="props">
+            <EditTable :text="props.row.cmdId" @saveEdit="val=>props.row.cmdId=val"></EditTable>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="cmdStr"
+          label="命令内容"
           width="150">
           <template slot-scope="props">
-            <EditTable :text="props.row.date" @saveEdit="saveEdit"></EditTable>
+            <EditTable :text="props.row.cmdStr" @saveEdit="val=>props.row.cmdStr=val"></EditTable>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="timeConsuming"
+          label="预估执行时间"
+          width="150">
+          <template slot-scope="props">
+            <EditTable :text="props.row.timeConsuming" @saveEdit="val=>props.row.timeConsuming=val"></EditTable>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="retryCount"
+          label="重复次数"
+          width="100">
+          <template slot-scope="props">
+            <EditTable :text="props.row.retryCount" @saveEdit="val=>props.row.retryCount=val"></EditTable>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="successExplain"
+          label="执行成功提示"
+          width="150">
+          <template slot-scope="props">
+            <EditTable :text="props.row.successExplain" @saveEdit="val=>props.row.successExplain=val"></EditTable>
+          </template>
+        </el-table-column>
+         <el-table-column
+          prop="failureExplain"
+          label="执行失败提示"
+          width="150">
+          <template slot-scope="props">
+            <EditTable :text="props.row.failureExplain" @saveEdit="val=>props.row.failureExplain=val"></EditTable>
           </template>
         </el-table-column>
         <el-table-column 
-          label="配送信息" 
+          label="命令期望" 
           >
           <template slot-scope="props">
-            <el-table border :data="props.row.list">
+            <el-table border :data="props.row.expectResults">
             <el-table-column
-            prop="name"
-            label="姓名"
-            width="120">
+            prop="enumCompareWay"
+            label="检测方式"
+            width="150">
              <template slot-scope="props">
-              <EditTable :text="props.row.name"></EditTable>
+              <!-- <EditTable :text="props.row.name" @saveEdit="val=>props.row.name=val"></EditTable> -->
+              <el-select v-model="props.row.enumCompareWay" placeholder="请选择">
+                <el-option
+                  v-for="item in enumCompareWayOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
             </template>
           </el-table-column>
           <el-table-column
-              prop="province"
-              label="省份"
+              prop="markStr"
+              label="标记文本"
               width="120">
                <template slot-scope="props">
-                 <EditTable :text="props.row.province"></EditTable>
+                 <EditTable :text="props.row.markStr" @saveEdit="val=>props.row.markStr=val"></EditTable>
               </template>
             </el-table-column>
             <el-table-column
-              prop="date"
-              label="省份"
+              prop="count"
+              label="出现次数"
+              width="100"
               >
                <template slot-scope="props">
-                <EditTable :text="props.row.date"></EditTable>
+                <EditTable :text="props.row.count" @saveEdit="val=>props.row.count=val"></EditTable>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="150">
@@ -58,65 +116,78 @@
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click="handleDelete(scope.$index, scope, props.row.expectResults)">删除</el-button>
             </template>
             </el-table-column>
           </el-table>
-          <span class="add" @click="addData(props.row)">添加</span>
+          <span class="add" @click="addData(props.row.expectResults, 1)">添加</span>
           </template>
         </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="danger"
-                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                @click="handleDelete(scope.$index, scope.row, dialogData.commandList)">删除</el-button>
             </template>
          </el-table-column>
       </el-table>
-      <span class="add">添加</span>
+      <span class="add" @click="addData(dialogData.commandList, 2)">添加</span>
       </div>
     </div>
 </template>
 
 <script>
-import EditTable from './editTable';
+import EditTable from './EditTable';
 export default {
   components:{
     EditTable,
   },
+  props:['dialogData'],
   data(){
     return{
       form: {
         name:'',
        },
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          list:[]
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          list:[{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          }]
-        }],
+       enumCompareWayOption:[{
+         value:'CONTAINS',
+         label:'包含判断',
+       },{
+         value:'EQUAL',
+         label:'全等',
+       },{
+         value:'NOT_CONTANS',
+         label:'不包含',
+       }]
     }
   },
+  mounted(){
+    
+  },
   methods:{
-    addData(val){ // 增加数据
-      val.list.push({
-        date: '',
-        name: '',
-        province: '',
-      });
+    addData(val, flag){ // 增加数据
+    let obj = {};
+    if(flag==1){
+      obj = {
+        enumCompareWay:'',
+        markStr:'',
+        count:'',
+      }
+    } else {
+      obj = {
+        cmdId: '',
+        cmdStr: '',
+        expectResults: [],
+        retryCount: '',
+        timeConsuming: '',
+        successExplain: '',
+        failureExplain: '',
+      }
+    }
+      val.push(obj);
     },
-    saveEdit(el, val){
-      console.log(el,val);
+    handleDelete(index, row, data){ // 删除数据
+      data.splice(index, 1);
     }
   }
 }
