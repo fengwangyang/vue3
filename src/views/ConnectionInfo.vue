@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import DialogContent from '@/common/Dialog';
+import DialogContent from '../common/dialog';
 import DialogSocket from '@/components/Socket';
 export default {
   name: 'HelloWorld',
