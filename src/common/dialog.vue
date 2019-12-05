@@ -138,7 +138,7 @@
 </template>
 
 <script>
-import EditTable from './EditTable';
+import EditTable from './editTable';
 export default {
   components:{
     EditTable,
