@@ -1,4 +1,4 @@
-FROM node
+FROM hub.c.163.com/library/node
 
 RUN mkdir -p /home/Service
 
