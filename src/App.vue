@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-container style="height:100%;border: 1px solid #eee">
+    <!-- <el-container style="height:100%;border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
      <el-menu
       default-active="/"
@@ -20,7 +20,8 @@
     <el-main>
       <router-view ></router-view>
     </el-main>
-    </el-container>
+    </el-container> -->
+    测试jekins
   </div>
 </template>
 
